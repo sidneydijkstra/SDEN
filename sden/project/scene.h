@@ -19,9 +19,10 @@ class Scene
 {
 public:
 	Scene();
+	~Scene();
 	void update(float deltaTime);
 	Mesh* player;
-
+	Mesh* enemy;
 	// get camera
 	Camera* getCamera() { return camera; };
 	Input* getInput() { return input; };

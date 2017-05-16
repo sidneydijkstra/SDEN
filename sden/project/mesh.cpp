@@ -4,6 +4,10 @@
 Mesh::Mesh(){
 }
 
+Mesh::~Mesh(){
+	delete textureloader;
+}
+
 void Mesh::draw(){
 }
 

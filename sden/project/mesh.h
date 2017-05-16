@@ -23,6 +23,7 @@
 class Mesh{
 public:
 	Mesh();
+	~Mesh();
 
 	void draw();
 	void addTexture(const char* location);

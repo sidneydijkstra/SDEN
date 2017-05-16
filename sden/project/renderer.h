@@ -24,11 +24,15 @@ class Renderer
 {
 public:
 	Renderer();
+	~Renderer();
 	void run();
 	// create window
 	void createWindow(int screenWidth_, int screenHeight_);
 	// render a 3D object
 	void render3DMesh(Mesh* mesh, Camera* camera, Shader* shader);
+
+	void renderVAO();
+	GLuint VAO, VBO;
 
 	// screen width
 	int screenWidth;
@@ -42,7 +46,12 @@ private:
 	GLfloat deltaTime = 0.0f;
 	GLfloat lastFrame = 0.0f;
 
-	Input* input;	
+	// input
+	Input* input;
+	// shader
+	Shader* shader;
+	// scene
+	Scene* scene;
 };
 
 #endif
