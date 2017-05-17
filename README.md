@@ -10,11 +10,18 @@ Windows, Linux, Mac:
 	cd build
 	cmake -Wno-dev ..
 	make
-	./CS3D_Project
+	./SDEN_Project
+
+Visual studio:
+
+	mkdir build
+	cd build
+	cmake ..
+	now open the visual studio project
 
 To launch the editor instead of the project:
 
-	./CS3D_Editor
+	./SDEN_Editor
 	
 <br><br>
 Copyright (c) Sidney Dijkstra. All Rights Reserved.
