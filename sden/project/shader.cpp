@@ -37,7 +37,7 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath) {
 
 	// get fragment shader code
 	std::string FragmentShaderCode;
-	std::ifstream FragmentShaderStream("shaders/fragment.shad", std::ios::in);
+	std::ifstream FragmentShaderStream(fragmentPath, std::ios::in);
 	if (FragmentShaderStream.is_open()) {
 		std::string Line = "";
 		while (getline(FragmentShaderStream, Line)) {

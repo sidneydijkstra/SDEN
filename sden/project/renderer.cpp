@@ -56,7 +56,7 @@ void Renderer::createWindow(int screenWidth_, int screenHeight_) {
 
 // main game loop
 void Renderer::run() {
-	shader = new Shader("shaders/vertex.shad", "shaders/fragment.shad");
+	shader = new Shader("shaders/normal.vert", "shaders/normal.frag");
 	scene = new Scene();
 	scene->setInput(input);
 
@@ -73,6 +73,7 @@ void Renderer::run() {
 		// poll events
 		glfwPollEvents();
 
+		// use shaders
 		shader->Use();
 
 		// clear color buffer
