@@ -4,13 +4,14 @@
 Scene::Scene() {
 	camera = new Camera();
 	player = new Mesh();
-	player->addTexture("assets/snoop.jpg");
+	player->addTexture("assets/dogh.jpg");
 	enemy = new Mesh();
 	enemy->addTexture("assets/snoop.jpg");
 	this->addChild(player);
 	this->addChild(enemy);
 
 	enemy->position.y += 1.1f;
+	enemy->scale.x += 10;
 }
 
 Scene::~Scene(){

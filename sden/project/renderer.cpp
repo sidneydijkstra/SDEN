@@ -66,6 +66,10 @@ void Renderer::run() {
 		// calulate deltatime
 		calculateDeltatime();
 
+		// calculate fps
+		calculateFPS();
+
+
 		// poll events
 		glfwPollEvents();
 
@@ -103,11 +107,12 @@ void Renderer::render3DMesh(Mesh * mesh, Camera * camera, Shader * shader){
 		glUniform1i(glGetUniformLocation(shader->Program, "ourTexture"), 0);
 	}
 	glm::mat4 model;
+	model = glm::scale(model, mesh->scale);
 	model = glm::translate(model, mesh->position);
 	model = glm::rotate(model, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
 	mesh->view = glm::lookAt(camera->position, camera->position + camera->front, camera->up);
-	mesh->projection = glm::perspective(45.0f, (GLfloat)screenWidth / (GLfloat)screenHeight, 0.5f, 100.0f);
+	mesh->projection = glm::perspective(45.0f, (GLfloat)screenWidth / (GLfloat)screenHeight, 0.001f, 100.0f);
 
 	GLint modelLoc = glGetUniformLocation(shader->Program, "model");
 	GLint viewLoc = glGetUniformLocation(shader->Program, "view");
@@ -192,4 +197,16 @@ void Renderer::calculateDeltatime(){
 	GLfloat currentFrame = glfwGetTime();
 	deltaTime = currentFrame - lastFrame;
 	lastFrame = currentFrame;
+}
+
+void Renderer::calculateFPS() {
+	currentTime = glfwGetTime();
+	fps++;
+	if (currentTime - lastTime >= 1) {
+		// print fps
+		std::cout << "fps: " << fps << std::endl;
+
+		lastTime = glfwGetTime();
+		fps = 0;
+	}
 }

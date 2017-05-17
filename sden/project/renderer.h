@@ -46,6 +46,12 @@ private:
 	GLfloat deltaTime = 0.0f;
 	GLfloat lastFrame = 0.0f;
 
+	// calculate fps
+	void calculateFPS();
+	GLfloat currentTime;
+	GLfloat lastTime;
+	GLfloat fps;
+
 	// input
 	Input* input;
 	// shader
