@@ -109,6 +109,15 @@ void Renderer::render3DMesh(Mesh * mesh, Camera * camera, Shader * shader, Scene
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, mesh->texture);
 		glUniform1i(glGetUniformLocation(shader->Program, "fragTexture"), 0);
+		// set doTexture to true
+		GLint uniformDoTexture = glGetUniformLocation(shader->Program, "doTexture");
+		// pass the matrices to the shader
+		glUniform1d(uniformDoTexture, true);
+	}else {
+		// set doTexture to false
+		GLint uniformDoTexture = glGetUniformLocation(shader->Program, "doTexture");
+		// pass the matrices to the shader
+		glUniform1d(uniformDoTexture, false);
 	}
 
 	// set positions, rotation and sacle

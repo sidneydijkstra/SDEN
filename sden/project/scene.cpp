@@ -5,7 +5,7 @@
 Scene::Scene() {
 	camera = new Camera();
 	player = new Mesh();
-	player->addTexture("assets/dogh.jpg");
+	//player->addTexture("assets/dogh.jpg");
 	enemy = new Mesh();
 	enemy->addTexture("assets/snoop.jpg");
 	this->addChild(player);
@@ -17,6 +17,8 @@ Scene::Scene() {
 
 	enemy->position.y += 1.1f;
 	enemy->scale.x += 10;
+
+	player->color = glm::vec3(2.4f, 1.3f, 0.4f);
 
 	// add lamp
 	Mesh* lamp = new Mesh();

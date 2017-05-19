@@ -12,16 +12,20 @@ uniform vec3 fragObjectColor;
 uniform vec3 fragLightColor;
 uniform vec3 fragLightPosition;
 uniform vec3 fragViewPosition;
-uniform bool lighting;
+uniform bool doLighting;
+uniform bool doTexture;
 
 void main()
 {
 
     // get texture
-    vec4 textureColor = texture2D(fragTexture, fragTextureCoord);
+    vec4 textureColor;
+    if(doTexture){
+       textureColor = texture2D(fragTexture, fragTextureCoord);
+    }
 
     // test if there is a light in the current scene
-    if(lighting){
+    if(doLighting){
 
       // ambient
       float ambientStrength = 0.1f;
@@ -48,9 +52,17 @@ void main()
         result = (ambient + diffuse + specular) * fragObjectColor;
       }
 
-      color = vec4(result * textureColor.rgb, textureColor.a);
+      if(doTexture){
+        color = vec4(result * textureColor.rgb, textureColor.a);
+      }else{
+        color = vec4(result, 1.0f);
+      }
 
     }else{
+      if(doTexture){
         color = vec4(textureColor.rgb, textureColor.a);
+      }else{
+        color = vec4(fragObjectColor, 1.0f);
+      }
     }
 }
