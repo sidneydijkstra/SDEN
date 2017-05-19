@@ -29,10 +29,10 @@ public:
 	// create window
 	void createWindow(int screenWidth_, int screenHeight_);
 	// render a 3D object
-	void render3DMesh(Mesh* mesh, Camera* camera, Shader* shader);
+	void render3DMesh(Mesh* mesh, Camera* camera, Shader* shader, Scene* scene);
 
 	void renderVAO();
-	GLuint VAO, VBO;
+	GLuint normalVAO, normalVBO;
 
 	// screen width
 	int screenWidth;

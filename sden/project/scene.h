@@ -28,17 +28,26 @@ public:
 	Input* getInput() { return input; };
 	void setInput(Input* input_) { input = input_; };
 
-	// child functions
+	// child functions \\
 	// add child
-	void addChild(Mesh* child) { childeren.push_back(child); };
+	void addChild(Mesh* child) { _childeren.push_back(child); };
 	// remove child
-	void removeChild(Mesh* child) { for (int i; i < childeren.size(); i++) { if (childeren[i] == child) { childeren.erase(childeren.begin() + i); }; }; };
+	void removeChild(Mesh* child) { for (int i; i < _childeren.size(); i++) { if (_childeren[i] == child) { _childeren.erase(_childeren.begin() + i); }; }; };
 	// get child count
-	int getChildCount() { return childeren.size(); };
+	int getChildCount() { return _childeren.size(); };
 	// get all childeren
-	std::vector<Mesh*> getAllChilderen() { return childeren; };
+	std::vector<Mesh*> getAllChilderen() { return _childeren; };
+
+	// lamp functions \\
+	// add lamp
+	void addLamp(Mesh* lamp) { _lamp = lamp; };
+	// remove lamp
+	void removeLamp() { _lamp = NULL; };
+	// get lamp
+	Mesh* getLamp() { return _lamp; };
 private:
-	std::vector<Mesh*> childeren;
+	std::vector<Mesh*> _childeren;
+	Mesh* _lamp = NULL;
 
 	Camera* camera;
 	Input* input;

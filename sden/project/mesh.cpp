@@ -19,3 +19,7 @@ void Mesh::setupMesh(){
 void Mesh::addTexture(const char * location){
 	texture = textureloader->loadTexture(location);
 }
+
+void Mesh::addNormalMap(const char * location) {
+	normalMap = textureloader->loadTexture(location);
+}
