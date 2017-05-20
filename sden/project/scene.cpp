@@ -3,29 +3,37 @@
 
 
 Scene::Scene() {
+	// add camera
 	camera = new Camera();
+
+	// add player and set texture
 	player = new Mesh();
-	//player->addTexture("assets/dogh.jpg");
+	player->addTexture("assets/dogh.jpg");
+
+	// add enemy and set texture
 	enemy = new Mesh();
-	enemy->addTexture("assets/snoop.jpg");
+
+	// addchild player and enemy
 	this->addChild(player);
 	this->addChild(enemy);
 
-	// add  normal maps
+	// add normal maps
 	player->addNormalMap("assets/brick.jpg");
-	enemy->addNormalMap("assets/brick.jpg");
-
-	enemy->position.y += 1.1f;
-	enemy->scale.x += 10;
-
-	player->color = glm::vec3(2.4f, 1.3f, 0.4f);
 
 	// add lamp
 	Mesh* lamp = new Mesh();
 	addLamp(lamp);
-	lamp->position = glm::vec3(5,5,5);
 
-	player->scale = glm::vec3(10,1,10);
+	// set lamp variabels
+	lamp->position = glm::vec3(1.5f,-1,0);
+
+	// set enemy variabels
+	enemy->position = lamp->position;
+	enemy->color = glm::vec3(2.6f, 0.3f, 1.2f);
+
+	// set player variabels
+	player->scale = glm::vec3(10,10,1);
+	player->position = glm::vec3(0,0,-5);
 }
 Scene::~Scene(){
 	delete this->camera;
@@ -39,12 +47,12 @@ Scene::~Scene(){
 }
 
 void Scene::update(float deltaTime){
+	// move camera with mouse and keyboard
 	this->getCamera()->move(deltaTime, this->getInput());
 
-	//getLamp()->position = camera->position;
+	//player->rotation.y += 9 * deltaTime;
 
 	//player->position.x += 0.1f * deltaTime;
-	enemy->position.x += 0.1f * deltaTime;
 	//scamera->position = glm::vec3(player->position.x, player->position.y, player->position.z + 4);
 }
 

@@ -92,6 +92,11 @@ void Renderer::run() {
 
 		// update end
 
+		// if G == keydown recompile shaders
+		if (input->getKey(GLFW_KEY_G)) {
+			shader = new Shader("shaders/normal.vert", "shaders/normal.frag");
+		}
+
 		// Swap the screen buffers
 		glfwSwapBuffers(window);
 	} 
@@ -109,15 +114,36 @@ void Renderer::render3DMesh(Mesh * mesh, Camera * camera, Shader * shader, Scene
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, mesh->texture);
 		glUniform1i(glGetUniformLocation(shader->Program, "fragTexture"), 0);
+
 		// set doTexture to true
 		GLint uniformDoTexture = glGetUniformLocation(shader->Program, "doTexture");
-		// pass the matrices to the shader
 		glUniform1d(uniformDoTexture, true);
+
+		// bind a normal map if there is a normal map in the mesh
+		if (mesh->normalMap != NULL) {
+			// add normal map
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, mesh->normalMap);
+			glUniform1i(glGetUniformLocation(shader->Program, "fragNormalMap"), 1);
+
+			// set doTexture to true
+			GLint uniformDoNormalMap = glGetUniformLocation(shader->Program, "doNormalMap");
+			glUniform1d(uniformDoNormalMap, true);
+		}else {
+			// set doTexture to false
+			GLint uniformDoNormalMap = glGetUniformLocation(shader->Program, "doNormalMap");
+			glUniform1d(uniformDoNormalMap, false);
+		}
+
+
 	}else {
 		// set doTexture to false
 		GLint uniformDoTexture = glGetUniformLocation(shader->Program, "doTexture");
-		// pass the matrices to the shader
 		glUniform1d(uniformDoTexture, false);
+
+		// set doTexture to false
+		GLint uniformDoNormalMap = glGetUniformLocation(shader->Program, "doNormalMap");
+		glUniform1d(uniformDoNormalMap, false);
 	}
 
 	// set positions, rotation and sacle
