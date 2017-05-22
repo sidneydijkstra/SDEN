@@ -21,7 +21,7 @@ uniform bool doLighting;
 uniform bool doTexture;
 uniform bool doNormalMap;
 
-void main()
+void main(){
   // temp textureColor variabel
   vec4 textureColor;
 
