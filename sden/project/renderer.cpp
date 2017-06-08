@@ -12,7 +12,9 @@ Renderer::Renderer() {
 
 Renderer::~Renderer(){
 	// delete shader
-	delete shader;
+	delete normalShader;
+	// delete shader
+	delete skyboxShader;
 	// delete scene
 	delete scene;
 	// delete input
@@ -55,14 +57,18 @@ void Renderer::createWindow(int screenWidth_, int screenHeight_) {
 
 // main game loop
 void Renderer::run() {
-	shader = new Shader("shaders/normal.vert", "shaders/normal.frag");
-	// skybox shader TEMP
+	// normal shader
+	normalShader = new Shader("shaders/normal.vert", "shaders/normal.frag");
+	// skybox shader
 	skyboxShader = new Shader("shaders/skybox.vert", "shaders/skybox.frag");
+
+	// create scene
 	scene = new Scene();
 	scene->setInput(input);
 
+	// init buffers
 	initCubeBuffer();
-	initSkyboxBuffer();
+
 	// game loop
 	while (!glfwWindowShouldClose(window)) {
 		// calulate deltatime
@@ -70,7 +76,6 @@ void Renderer::run() {
 
 		// calculate fps
 		calculateFPS();
-
 
 		// poll events
 		glfwPollEvents();
@@ -81,28 +86,29 @@ void Renderer::run() {
 
 		// update start
 
-		// render skybox TEMP
-		skyboxShader->Use();
-		render3DSkybox(scene->skybox_, scene->getCamera(), skyboxShader, scene);
-		glDepthMask(GL_TRUE);
-
-		// use shaders
-		shader->Use();
-
 		// update scene
 		scene->update(deltaTime);
 
-		// render scene childeren
-		for (int i = 0; i < scene->getChildCount(); i++){
-			render3DMesh(scene->getAllChilderen()[i], scene->getCamera(), shader, scene);
+		// update skybox if scene hase one
+		if (scene->getSkybox() != NULL) {
+			scene->getSkybox()->update(scene->getCamera()->position);
+			skyboxShader->Use();
+			render3DSkybox(scene->getSkybox(), scene->getCamera(), skyboxShader);
 		}
 
+		// use shaders before rendering
+		normalShader->Use();
+		// render scene childeren
+		for (int i = 0; i < scene->getChildCount(); i++){
+			render3DMesh(scene->getAllChilderen()[i], scene->getCamera(), normalShader, scene);
+		}
 
 		// update end
 
 		// if G == keydown recompile shaders
 		if (input->getKey(GLFW_KEY_G)) {
-			shader = new Shader("shaders/normal.vert", "shaders/normal.frag");
+			normalShader = new Shader("shaders/normal.vert", "shaders/normal.frag");
+			skyboxShader = new Shader("shaders/skybox.vert", "shaders/skybox.frag");
 		}
 
 		// Swap the screen buffers
@@ -202,38 +208,38 @@ void Renderer::render3DMesh(Mesh * mesh, Camera * camera, Shader * shader, Scene
 
 }
 
-// render a skybox TEMP
-void Renderer::render3DSkybox(Mesh * mesh, Camera * camera, Shader * shader, Scene * scene){
+// render a skybox
+void Renderer::render3DSkybox(Skybox* skybox, Camera* camera, Shader* shader){
 	// set depth mash to false
 	glDepthMask(GL_FALSE);
 	// bind skybox VAO
-	glBindVertexArray(skyboxVAO);
+	glBindVertexArray(skybox->skyboxVAO);
 
 	// check if mesh has a skybox texture
-	if (mesh->skybox == NULL) {
+	if (skybox->texture == NULL) {
 		std::cout << "skybox doesent have a skybox texture" << std::endl;
 		return;
 	}else {
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, mesh->skybox);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, skybox->texture);
 	}
 
 	// set positions, rotation and sacle
 	glm::mat4 model;
-	model = glm::translate(model, mesh->position);
+	model = glm::translate(model, skybox->position);
 
 	// set perspective
-	mesh->view = glm::lookAt(camera->position, camera->position + camera->front, camera->up);
-	mesh->projection = glm::perspective(45.0f, (GLfloat)screenWidth / (GLfloat)screenHeight, 0.001f, 100.0f);
+	skybox->view = glm::lookAt(camera->position, camera->position + camera->front, camera->up);
+	skybox->projection = glm::perspective(45.0f, (GLfloat)screenWidth / (GLfloat)screenHeight, 0.001f, 100.0f);
 
 	// set uniform model, view and perspective
 	GLint uniformModel = glGetUniformLocation(shader->Program, "model");
 	GLint uniformView = glGetUniformLocation(shader->Program, "view");
 	GLint uniformProjection = glGetUniformLocation(shader->Program, "projection");
 	// pass the matrices to the shader
-	glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(mesh->view));
+	glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(skybox->view));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(mesh->projection));
+	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(skybox->projection));
 
 	// draw cube
 	glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -242,6 +248,7 @@ void Renderer::render3DSkybox(Mesh * mesh, Camera * camera, Shader * shader, Sce
 	glDepthMask(GL_TRUE);
 }
 
+// create teh cube buffer
 void Renderer::initCubeBuffer() {
 	GLfloat vertices[] = {
 		// Positions           // Normals           // Texture Coords
@@ -303,64 +310,6 @@ void Renderer::initCubeBuffer() {
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(2);
-	glBindVertexArray(0);
-}
-
-void Renderer::initSkyboxBuffer(){
-	float vertices[] = {      
-		-1.0f,  1.0f, -1.0f,
-		-1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-
-		-1.0f, -1.0f,  1.0f,
-		-1.0f, -1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f,  1.0f,
-		-1.0f, -1.0f,  1.0f,
-
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-
-		-1.0f, -1.0f,  1.0f,
-		-1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f, -1.0f,  1.0f,
-		-1.0f, -1.0f,  1.0f,
-
-		-1.0f,  1.0f, -1.0f,
-		 1.0f,  1.0f, -1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		-1.0f,  1.0f,  1.0f,
-		-1.0f,  1.0f, -1.0f,
-
-		-1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f,  1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f,  1.0f,
-		 1.0f, -1.0f,  1.0f
-	};
-
-	glGenVertexArrays(1, &skyboxVAO);
-	glGenBuffers(1, &skyboxVBO);
-
-	glBindVertexArray(skyboxVAO);
-
-	// Vertices attribute
-	glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 	glBindVertexArray(0);
 }
 

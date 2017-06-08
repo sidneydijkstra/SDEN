@@ -10,6 +10,7 @@
 #include "mesh.h"
 #include "camera.h"
 #include "input.h"
+#include "skybox.h"
 // include glm
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -25,9 +26,6 @@ public:
 	Mesh* wall;
 	Mesh* floor;
 	Mesh* light;
-
-	// skybox TEMP
-	Mesh* skybox_;
 
 	// get camera
 	Camera* getCamera() { return camera; };
@@ -46,14 +44,24 @@ public:
 
 	// lamp functions \\
 	// add lamp
-	void addLamp(Mesh* lamp) { _lamp = lamp; };
+	void addLamp(Mesh* lamp) { delete _lamp; _lamp = lamp; };
 	// remove lamp
-	void removeLamp() { _lamp = NULL; };
+	void removeLamp() { delete _lamp; _lamp = NULL; };
 	// get lamp
 	Mesh* getLamp() { return _lamp; };
+
+	// skybox functions \\
+	// add skybox
+	void addSkybox(const char* right, const char* left, const char* top, const char* bottom, const char* back, const char* front) { delete _skybox;  _skybox = new Skybox(right, left, top, bottom, back, front); };
+	// remove skybox
+	void removeSkybox() { delete _skybox; _skybox = NULL; };
+	// get skybox
+	Skybox* getSkybox() { return _skybox; };
 private:
 	std::vector<Mesh*> _childeren;
+
 	Mesh* _lamp = NULL;
+	Skybox* _skybox = NULL;
 
 	Camera* camera;
 	Input* input;

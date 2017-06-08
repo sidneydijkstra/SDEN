@@ -17,8 +17,10 @@
 #include "shader.h"
 // include camera
 #include "camera.h"
-// include camera
+// include scene
 #include "scene.h"
+// include skybox
+#include "skybox.h"
 
 class Renderer
 {
@@ -56,8 +58,8 @@ private:
 
 	// input
 	Input* input;
-	// shader
-	Shader* shader;
+	// normal shader
+	Shader* normalShader;
 	// skybox shader
 	Shader* skyboxShader;
 	// scene
@@ -65,11 +67,10 @@ private:
 
 	// render a 3D object
 	void render3DMesh(Mesh* mesh, Camera* camera, Shader* shader, Scene* scene);
-	void render3DSkybox(Mesh* mesh, Camera* camera, Shader* shader, Scene* scene);
+	void render3DSkybox(Skybox* mesh, Camera* camera, Shader* shader);
 
 	// bind buffer functions
 	void initCubeBuffer();
-	void initSkyboxBuffer();
 
 };
 

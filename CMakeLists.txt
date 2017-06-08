@@ -145,6 +145,8 @@ add_executable(SDEN_Project
 	sden/project/input.h
 	sden/project/scene.cpp
 	sden/project/scene.h
+	sden/project/skybox.cpp
+	sden/project/skybox.h
 )
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT SDEN_Project)

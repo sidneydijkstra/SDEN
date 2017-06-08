@@ -10,12 +10,8 @@ Scene::Scene() {
 	light = new Mesh();
 	floor = new Mesh();
 
-	// set skybox options TEMP
-	skybox_ = new Mesh();
-	skybox_->addSkybox("assets/skybox/s_right.jpg", "assets/skybox/s_left.jpg", "assets/skybox/s_top.jpg", "assets/skybox/s_bottom.jpg", "assets/skybox/s_back.jpg", "assets/skybox/s_front.jpg");
-
 	wall->addTexture("assets/dogh.jpg");
-	//floor->addSkybox("assets/skybox/s_right.tga", "assets/skybox/s_left.tga", "assets/skybox/s_top.tga", "assets/skybox/s_bottom.tga", "assets/skybox/s_back.tga", "assets/skybox/s_front.tga");
+	this->addSkybox("assets/skybox/s_right.jpg", "assets/skybox/s_left.jpg", "assets/skybox/s_top.jpg", "assets/skybox/s_bottom.jpg", "assets/skybox/s_back.jpg", "assets/skybox/s_front.jpg");
 
 	// addchild wall floor and light
 	this->addChild(wall);
@@ -45,16 +41,6 @@ Scene::Scene() {
 	floor->position = glm::vec3(0,-5.5f,0);
 	floor->scale = glm::vec3(10,1,10);
 }
-Scene::~Scene(){
-	delete this->camera;
-	delete this->skybox_;
-	for (int i = 0; i < this->_childeren.size(); i++){
-		delete this->_childeren[i];
-	}
-	if (this->getLamp() != NULL) {
-		delete this->getLamp();
-	}
-}
 
 void Scene::update(float deltaTime){
 	// move camera with mouse and keyboard
@@ -62,10 +48,21 @@ void Scene::update(float deltaTime){
 
 	//wall->rotation.y += 9 * deltaTime;
 
-	// set skybox pos TEMP
-	skybox_->position = camera->position;
-
 	//wall->position.x += 0.1f * deltaTime;
 	//camera->position = glm::vec3(light->position.x, light->position.y, light->position.z + 4);
+}
+
+// delete all the object whene you destroy the scene
+Scene::~Scene() {
+	delete this->camera;
+	for (int i = 0; i < this->_childeren.size(); i++) {
+		delete this->_childeren[i];
+	}
+	if (this->getLamp() != NULL) {
+		delete this->getLamp();
+	}
+	if (this->getSkybox() != NULL) {
+		delete this->getSkybox();
+	}
 }
 
