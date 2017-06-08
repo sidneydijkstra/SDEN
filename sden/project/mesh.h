@@ -30,6 +30,8 @@ public:
 	void addTexture(const char* location);
 	// add a normal map
 	void addNormalMap(const char * location);
+	// add a skybox texture
+	void addSkybox(const char* right, const char* left, const char* top, const char* bottom, const char* back, const char* front);
 
 	// mesh transform variables
 	glm::vec3 position = glm::vec3(0, 0, 0);
@@ -47,13 +49,14 @@ public:
 	// mesh texture
 	GLuint texture = NULL;
 	GLuint normalMap = NULL;
+
+	// skybox texture TEMP
+	unsigned int skybox = NULL;
 private:
 	void setupMesh();
 
 	// pointers
 	Texture* textureloader = new Texture();
-
-
 };
 
 #endif

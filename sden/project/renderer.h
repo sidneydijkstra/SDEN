@@ -28,11 +28,13 @@ public:
 	void run();
 	// create window
 	void createWindow(int screenWidth_, int screenHeight_);
-	// render a 3D object
-	void render3DMesh(Mesh* mesh, Camera* camera, Shader* shader, Scene* scene);
 
-	void renderVAO();
+	// load object #### does not work yet ####
+	void loadObject(const char * path);
+
+
 	GLuint normalVAO, normalVBO;
+	GLuint skyboxVAO, skyboxVBO;
 
 	// screen width
 	int screenWidth;
@@ -56,8 +58,19 @@ private:
 	Input* input;
 	// shader
 	Shader* shader;
+	// skybox shader
+	Shader* skyboxShader;
 	// scene
 	Scene* scene;
+
+	// render a 3D object
+	void render3DMesh(Mesh* mesh, Camera* camera, Shader* shader, Scene* scene);
+	void render3DSkybox(Mesh* mesh, Camera* camera, Shader* shader, Scene* scene);
+
+	// bind buffer functions
+	void initCubeBuffer();
+	void initSkyboxBuffer();
+
 };
 
 #endif

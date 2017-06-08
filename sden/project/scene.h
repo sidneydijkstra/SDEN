@@ -21,8 +21,14 @@ public:
 	Scene();
 	~Scene();
 	void update(float deltaTime);
-	Mesh* player;
-	Mesh* enemy;
+
+	Mesh* wall;
+	Mesh* floor;
+	Mesh* light;
+
+	// skybox TEMP
+	Mesh* skybox_;
+
 	// get camera
 	Camera* getCamera() { return camera; };
 	Input* getInput() { return input; };
