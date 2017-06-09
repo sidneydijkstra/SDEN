@@ -18,10 +18,6 @@ Visual studio:
 	cd build
 	cmake ..
 	now open the visual studio project
-
-To launch the editor instead of the project:
-
-	./SDEN_Editor
 	
 <br><br>
 Copyright (c) Sidney Dijkstra. All Rights Reserved.
